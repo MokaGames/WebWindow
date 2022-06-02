@@ -145,10 +145,6 @@ namespace WebWindows
             var onMovedDelegate = (MovedCallback)OnMoved;
             _gcHandlesToFree.Add(GCHandle.Alloc(onMovedDelegate));
             WebWindow_SetMovedCallback(_nativeWebWindow, onMovedDelegate);
-
-            // Auto-show to simplify the API, but more importantly because you can't
-            // do things like navigate until it has been shown
-            Show();
         }
 
         ~WebWindow()
