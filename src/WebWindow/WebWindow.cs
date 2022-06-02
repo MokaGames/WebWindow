@@ -41,7 +41,7 @@ namespace WebWindows
         { }
     }
 
-    public class WebWindow
+    public class WebWindow : IDisposable
     {
         // Here we use auto charset instead of forcing UTF-8.
         // Thus the native code for Windows will be much more simple.
@@ -149,20 +149,8 @@ namespace WebWindows
 
         ~WebWindow()
         {
-            // TODO: IDisposable
-            WebWindow_SetResizedCallback(_nativeWebWindow, null);
-            WebWindow_SetMovedCallback(_nativeWebWindow, null);
-            foreach (var gcHandle in _gcHandlesToFree)
-            {
-                gcHandle.Free();
-            }
-            _gcHandlesToFree.Clear();
-            foreach (var handle in _hGlobalToFree)
-            {
-                Marshal.FreeHGlobal(handle);
-            }
-            _hGlobalToFree.Clear();
-            WebWindow_dtor(_nativeWebWindow);
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: false);
         }
 
         public void Show() => WebWindow_Show(_nativeWebWindow);
@@ -453,6 +441,8 @@ namespace WebWindows
         public uint ScreenDpi => WebWindow_GetScreenDpi(_nativeWebWindow);
 
         private bool _topmost = false;
+        private bool _disposed;
+
         public bool Topmost
         {
             get => _topmost;
@@ -476,6 +466,35 @@ namespace WebWindows
             {
                 WebWindow_SetWebView2UserDataFolder(_nativeWebWindow, userDataFolder);
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                WebWindow_SetResizedCallback(_nativeWebWindow, null);
+                WebWindow_SetMovedCallback(_nativeWebWindow, null);
+                foreach (var gcHandle in _gcHandlesToFree)
+                {
+                    gcHandle.Free();
+                }
+                _gcHandlesToFree.Clear();
+                foreach (var handle in _hGlobalToFree)
+                {
+                    Marshal.FreeHGlobal(handle);
+                }
+                _hGlobalToFree.Clear();
+                WebWindow_dtor(_nativeWebWindow);
+
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
