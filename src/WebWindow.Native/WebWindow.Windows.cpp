@@ -18,6 +18,7 @@ std::mutex invokeLockMutex;
 HINSTANCE WebWindow::_hInstance;
 HWND messageLoopRootWindowHandle;
 std::map<HWND, WebWindow*> hwndToWebWindow;
+WCHAR userDataFolder[MAX_PATH] = {};
 
 struct InvokeWaitInfo
 {
@@ -206,7 +207,7 @@ void WebWindow::AttachWebView()
 	std::atomic_flag flag = ATOMIC_FLAG_INIT;
 	flag.test_and_set();
 
-	HRESULT envResult = CreateCoreWebView2EnvironmentWithOptions(nullptr, nullptr, nullptr,
+	HRESULT envResult = CreateCoreWebView2EnvironmentWithOptions(nullptr, userDataFolder, nullptr,
 		Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
 			[&, this](HRESULT result, ICoreWebView2Environment* env) -> HRESULT {
 				if (result != S_OK) { return result; }
@@ -411,5 +412,18 @@ void WebWindow::SetIconFile(AutoString filename)
 	if (icon)
 	{
 		::SendMessage(_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+	}
+}
+
+void WebWindow::SetWebView2UserDataFolder(PCWSTR path)
+{
+	auto len = wcslen(path);
+	if (len > 0 && len <= MAX_PATH)
+	{
+		wcscpy_s(userDataFolder, path);
+	}
+	else
+	{
+		memset(userDataFolder, 0, MAX_PATH * sizeof(WCHAR));
 	}
 }

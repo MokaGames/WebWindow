@@ -82,6 +82,7 @@ namespace WebWindows
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetMovedCallback(IntPtr instance, MovedCallback callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetTopmost(IntPtr instance, int topmost);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_SetIconFile(IntPtr instance, string filename);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_SetWebView2UserDataFolder(IntPtr instance, string userDataFolder);
 
         private readonly List<GCHandle> _gcHandlesToFree = new List<GCHandle>();
         private readonly List<IntPtr> _hGlobalToFree = new List<IntPtr>();
@@ -470,5 +471,13 @@ namespace WebWindows
         }
 
         public void SetIconFile(string filename) => WebWindow_SetIconFile(_nativeWebWindow, Path.GetFullPath(filename));
+
+        public void SetUserDataFolder(string userDataFolder)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                WebWindow_SetWebView2UserDataFolder(_nativeWebWindow, userDataFolder);
+            }
+        }
     }
 }

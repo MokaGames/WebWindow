@@ -18,6 +18,11 @@ extern "C"
 	{
 		return instance->getHwnd();
 	}
+
+	EXPORTED void WebWindow_SetWebView2UserDataFolder(WebWindow* instance, LPWSTR userDataFolder)
+	{
+		instance->SetWebView2UserDataFolder(userDataFolder);
+	}
 #elif OS_MAC
 	EXPORTED void WebWindow_register_mac()
 	{

@@ -91,6 +91,10 @@ public:
 	void InvokeMoved(int x, int y) { if (_movedCallback) _movedCallback(x, y); }
 	void SetTopmost(bool topmost);
 	void SetIconFile(AutoString filename);
+#ifdef _WIN32
+	void SetWebView2UserDataFolder(PCWSTR path);
+#endif // _WIN32
+
 };
 
 #endif // !WEBWINDOW_H
