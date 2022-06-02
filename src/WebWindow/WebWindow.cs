@@ -470,6 +470,8 @@ namespace WebWindows
 
         public void SetUserDataFolder(string userDataFolder)
         {
+            userDataFolder = Path.GetFullPath(userDataFolder);
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 WebWindow_SetWebView2UserDataFolder(_nativeWebWindow, userDataFolder);
