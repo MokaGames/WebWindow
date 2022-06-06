@@ -89,6 +89,7 @@ namespace WebWindows
         private readonly IntPtr _nativeWebWindow;
         private readonly int _ownerThreadId;
         private string _title;
+        private bool _shown;
 
         static WebWindow()
         {
@@ -153,7 +154,13 @@ namespace WebWindows
             Dispose(disposing: false);
         }
 
-        public virtual void Show() => WebWindow_Show(_nativeWebWindow);
+        public virtual void Show()
+        {
+            WebWindow_Show(_nativeWebWindow);
+
+            _shown = true;
+        }
+
         public void WaitForExit() => WebWindow_WaitForExit(_nativeWebWindow);
 
         public string Title
@@ -201,16 +208,20 @@ namespace WebWindows
 
         public void NavigateToString(string content)
         {
+            ThrowIfNotShown();
             WebWindow_NavigateToString(_nativeWebWindow, content);
         }
 
         public void NavigateToUrl(string url)
         {
+            ThrowIfNotShown();
             WebWindow_NavigateToUrl(_nativeWebWindow, url);
         }
 
         public void NavigateToLocalFile(string path)
         {
+            ThrowIfNotShown();
+
             var absolutePath = Path.GetFullPath(path);
             var url = new Uri(absolutePath, UriKind.Absolute);
             NavigateToUrl(url.ToString());
@@ -495,6 +506,14 @@ namespace WebWindows
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        private void ThrowIfNotShown()
+        {
+            if (!_shown)
+            {
+                throw new InvalidOperationException("Web navigation is only available after Show() has been called.");
+            }
         }
     }
 }
