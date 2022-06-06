@@ -69,8 +69,10 @@ WebWindow::WebWindow(AutoString title, WebWindow* parent, WebMessageReceivedCall
 	hwndToWebWindow[_hWnd] = this;
 }
 
-// Needn't to release the handles.
-WebWindow::~WebWindow() {}
+WebWindow::~WebWindow() 
+{
+	PostMessage(_hWnd, WM_CLOSE, 0, 0);
+}
 
 HWND WebWindow::getHwnd()
 {
@@ -81,6 +83,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_CLOSE:
+	{
+		DestroyWindow(hwnd);
+		return 0;
+	}
 	case WM_DESTROY:
 	{
 		// Only terminate the message loop if the window being closed is the one that
