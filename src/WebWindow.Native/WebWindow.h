@@ -47,6 +47,7 @@ private:
 	wil::com_ptr<ICoreWebView2> _webviewWindow;
 	wil::com_ptr<ICoreWebView2Controller> _webviewController;
 	std::map<std::wstring, WebResourceRequestedCallback> _schemeToRequestHandler;
+	WCHAR _userDataFolder[MAX_PATH];
 	void AttachWebView();
 #elif OS_LINUX
 	GtkWidget* _window;
