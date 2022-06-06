@@ -311,7 +311,7 @@ namespace WebWindows
 
         private void SetSize() => Invoke(() => WebWindow_SetSize(_nativeWebWindow, _width, _height));
 
-        public int Width
+        public virtual int Width
         {
             get
             {
@@ -329,7 +329,7 @@ namespace WebWindows
             }
         }
 
-        public int Height
+        public virtual int Height
         {
             get
             {
@@ -347,7 +347,7 @@ namespace WebWindows
             }
         }
 
-        public Size Size
+        public virtual Size Size
         {
             get
             {
@@ -376,7 +376,7 @@ namespace WebWindows
 
         private void SetPosition() => Invoke(() => WebWindow_SetPosition(_nativeWebWindow, _x, _y));
 
-        public int Left
+        public virtual int Left
         {
             get
             {
@@ -394,7 +394,7 @@ namespace WebWindows
             }
         }
 
-        public int Top
+        public virtual int Top
         {
             get
             {
@@ -412,7 +412,7 @@ namespace WebWindows
             }
         }
 
-        public Point Location
+        public virtual Point Location
         {
             get
             {
