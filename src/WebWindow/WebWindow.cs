@@ -153,7 +153,7 @@ namespace WebWindows
             Dispose(disposing: false);
         }
 
-        public void Show() => WebWindow_Show(_nativeWebWindow);
+        public virtual void Show() => WebWindow_Show(_nativeWebWindow);
         public void WaitForExit() => WebWindow_WaitForExit(_nativeWebWindow);
 
         public string Title
