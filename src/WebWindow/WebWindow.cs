@@ -156,6 +156,11 @@ namespace WebWindows
 
         public virtual void Show()
         {
+            if (_topmost)
+            {
+                Invoke(() => WebWindow_SetTopmost(_nativeWebWindow, 1));
+            }
+
             WebWindow_Show(_nativeWebWindow);
 
             _shown = true;
